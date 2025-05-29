@@ -1,0 +1,32 @@
+---
+kind: Pod
+apiVersion: v1
+metadata:
+  name: busybox
+  labels:
+    app: busybox-test
+    owner: avillegas
+  annotations:
+    openshift.io/scc: anyuid
+spec:
+  restartPolicy: Always
+  serviceAccountName: default
+  schedulerName: default-scheduler
+  terminationGracePeriodSeconds: 30
+  securityContext:
+    seLinuxOptions:
+      level: 's0:c11,c10'
+  containers:
+    - resources: {}
+      name: hello-openshift
+      securityContext:
+        capabilities:
+          drop:
+            - MKNOD
+        procMount: Default
+      ports:
+        - containerPort: 8080
+          protocol: TCP
+      imagePullPolicy: Always
+  serviceAccount: default
+  dnsPolicy: ClusterFirst
